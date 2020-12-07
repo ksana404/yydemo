@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yy.mapper.OrderMapper">
+	
+	
+	<!--  通过 订单id查询该订单所有信息
+	Order queryOrderByOrderId(@Param("id") String id); -->
+	
+	<!-- 主查询Order,其返回对象封装进一个ResultMap -->
+	<select id="queryOrderByOrderId" resultMap="orderMap">
+	 SELECT * FROM tb_order WHERE order_id=#{id};
+	</select>
+	
+	<!-- orderMap 返回结果Map构建 -->
+	<resultMap type="Order" id="orderMap" autoMapping="true">
+	<!-- type:返回映射类型; id:resultMap的标识;   autoMapping:是否开启自动驼峰映射. -->
+	<!-- 与主查询的关联字段  -->
+	<id column="order_id" property="orderId"></id>
+	
+	<!-- association:一对一封装  select来源查询,一对一封装 --> <!-- 这里是查询物流信息 -->
+	<association property="orderShipping" javaType="OrderShipping" column="order_id"
+	select="queryOrderShippingByOrderId" ></association>
+	<!-- association:一对一封装  select来源查询 -->
+	<!-- property:该查询结果 对应主查询返回对象的属性; javaType:类型; column:关联字段;  select:数据来源于另一个查询; -->
+	
+	<!-- select来源查询,一对一封装 --><!-- 这里是查询商品列表 -->
+	<collection property="orderItems" ofType="OrderItem" column="order_id"
+	select="queryOrderItemsByOrderId" ></collection>
+	<!-- collection:select来源查询,一对多封装  -->
+	<!-- property:该查询结果 对应主查询返回对象的属性; ofType:类型,是select查询出来的单个类型!!!! ; column:关联字段;  select:数据来源于另一个查询; -->
+	</resultMap>
+	
+	<!-- 订单物流信息查询 -->
+	<select id="queryOrderShippingByOrderId" resultType="OrderShipping">
+	 SELECT * FROM tb_order_shipping WHERE order_id=#{id};
+	</select>
+	
+	<!-- 订单商品信息查询 -->
+	<select id="queryOrderItemsByOrderId" resultType="OrderItem">
+	 SELECT * FROM tb_order_item WHERE order_id=#{id};
+	</select>
+	
+</mapper>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yy.mapper.ItemMapper">
+	<!--留着以后用  -->
+	
+	<!-- findAllItems 查询所有商品 -->
+	<select id="findAllItems"  resultType="com.yy.pojo.Item">
+	SELECT * FROM tb_item;
+	</select>
+	
+	
+	<!-- 根据修改时间 降序排列,从第一条开始跳过10条往后面查询20条数据.  SELECT * FROM tb_item  ORDER BY updated DESC LIMIT 10,20;  -->
+	<!-- 根据当前页面第一行 和最后一行 查询当前页面List. -->
+	<!-- List<Item> findAllPage(Integer startIndex, Integer pageSize); -->
+	<select id="findAllPage" parameterType="int" resultType="com.yy.pojo.Item">
+	SELECT * FROM tb_item ORDER BY updated DESC LIMIT #{startIndex},#{pageSize};
+	</select>
+	
+	<!-- Integer deleteByIds(@Param("ids")Long[] ids); java.lang.reflect.Array -->
+	<delete id="deleteByIds">
+	DELETE FROM tb_item WHERE id in (
+	<foreach collection="ids" item="id"  separator="," >#{id}</foreach>)
+	</delete>
+	
+	<!-- 	<delete id="deleteByIds">
+		DELETE FROM tb_item WHERE id IN (
+		<foreach collection="ids" item="id" separator=",">
+			#{id}
+		</foreach>
+		)
+	</delete> -->
+	
+	<!-- 
+	
+	DELETE FROM tb_item WHERE id IN (
+		<foreach collection="array" item="id" separator=",">
+			#{id}
+		</foreach>)
+		
+		
+	 <foreach collection="cond.idList" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+	 -->
+	 
+	 <!-- 
+	 	void updataSatus(@Param("ids")Long[] ids, @Param("status")Integer status);
+	  -->
+	  
+	  <update id="updataSatus" parameterType="int">
+	  UPDATE tb_item SET STATUS =#{status} ,updated=NOW()  WHERE id in(
+	  <foreach collection="ids" item="id"  separator="," >#{id}</foreach>
+	  );
+	  
+	  </update>
+</mapper>

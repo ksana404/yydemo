@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: yy-sso
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: Administrator
+Implementation-Vendor-Id: com.yy
+Build-Jdk: 1.8.0_161
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
+ ot-starter-parent/yy/yy-sso
+Created-By: Maven Integration for Eclipse
+

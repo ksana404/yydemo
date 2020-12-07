@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yy.mapper.OrderMapper">
+	<!--留着以后用  -->
+	
+	<!-- Integer deleteByIds(@Param("ids")Long[] ids);  java.lang.reflect.Array -->
+	
+	
+<!--  
+	 通过 订单id查询该订单所有信息
+	Order queryOrderByOrderId(String id);
+	 -->
+	
+	<select id="queryOrderByOrderId" resultMap="orderRM">
+		select * from tb_order where order_id = #{id}
+	</select>
+	
+	 <!--数据封装
+		1.主键信息映射  必须添加
+		2.开启自动映射 
+		  autoMapping="true"
+		  如果保证字段和属性的名称一致可以自动映射(包含驼峰规则)
+		  
+	  -->
+	<resultMap type="Order" id="orderRM" autoMapping="true">
+		<id column="order_id" property="orderId"/>
+		<!--一对一封装  -->
+		<association property="orderShipping" javaType="OrderShipping"
+		column="order_id" select="findOrderShipping"></association>
+		
+		<!--一对多封装  -->
+		<collection property="orderItems" 
+		ofType="OrderItem" column="order_id" select="findOrderItem"></collection>
+		
+	</resultMap>
+	
+	<!--查询订单物流  -->
+	<select id="findOrderShipping" resultType="OrderShipping">
+		select * from tb_order_shipping where order_id = #{id}
+	</select>
+	
+	<select id="findOrderItem" resultType="OrderItem">
+		select * from tb_order_item where order_id = #{id}
+	</select>
+	
+	
+	
+</mapper>
